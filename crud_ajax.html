@@ -82,8 +82,8 @@
                         $template.querySelector(".name").textContent = element.nombre;
                         $template.querySelector(".constellation").textContent = element.constelacion;
                         $template.querySelector(".edit").dataset.id = element.id;
-                        $template.querySelector(".edit").dataset.name = element.name;
-                        $template.querySelector(".edit").dataset.cosntellation = element.constelacion;
+                        $template.querySelector(".edit").dataset.name = element.nombre;
+                        $template.querySelector(".edit").dataset.constellation = element.constelacion;
                         $template.querySelector(".delete").dataset.id = element.id;
 
                         let $clone = document.importNode($template, true);
@@ -116,8 +116,29 @@
                         }
                     })
                 } else{
-
+                    ajax({
+                        url: `http://localhost:5555/santos/${e.target.id.value}`,
+                        method: "PUT",
+                        success: (res) => location.reload(),
+                        error: () => $form.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`),
+                        data: {
+                            nombre: e.target.nombre.value,
+                            constelacion: e.target.constelacion.value
+                        }
+                    })
                 }
+            }
+        });
+
+        document.addEventListener("click", e => {
+            if (e.target.matches(".edit")) {
+                $tittle.textContent = "Editar Santo";
+                $form.nombre.value = e.target.dataset.name;
+                $form.constelacion.value = e.target.dataset.constellation;
+                $form.id.value = e.target.dataset.id;
+            }
+            if (e.target.matches(".delete")) {
+                
             }
         })
     </script>
