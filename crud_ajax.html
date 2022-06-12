@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD API REST AJAX</title>
 </head>
+
 <body>
     <h1>CRUD API REST AJAX</h1>
     <section class="crud">
@@ -18,7 +20,7 @@
             <input type="text" name="constelacion" placeholder="Constelacion" required>
             <br>
             <input type="submit" value="Enviar">
-            <input type="hidden" name="action">
+            <input type="hidden" name="id">
         </form>
         <article>
             <h2>Ver Santo</h2>
@@ -35,7 +37,7 @@
             </table>
         </article>
     </section>
-    <template>
+    <template id="crud-template">
         <tr>
             <td class="name"></td>
             <td class="constellation"></td>
@@ -47,12 +49,57 @@
     </template>
     <script>
         const $table = document.querySelector(".crud-table");
-        const $form = document.querySelector(".crud-form"); 
-        const $tittle = document.querySelector(".crud-tittle"); 
+        const $form = document.querySelector(".crud-form");
+        const $tittle = document.querySelector(".crud-tittle");
         const $template = document.getElementById("crud-template").content;
-        const $fragment = document.createDocumentFragment(); 
+        const $fragment = document.createDocumentFragment();
 
+        const ajax = (options) => {
+            let { url, method, success, error, data } = options;
+            const xhr = new XMLHttpRequest();
 
+            xhr.addEventListener("readystatechange", e => { 
+                if(xhr.readyState !== 4) return;
+                if (xhr.status >= 200 && xhr.status <300) {
+                    let json  = JSON.parse(xhr.responseText);
+                    success(json);
+                } else{
+                    let message = xhr.statusText || "Ocurrio un error";
+                    error(`Error ${xhr.status}: ${message}`);
+                }
+            });
+            xhr.open(method || "GET", url);
+            xhr.setRequestHeader("Content-type", "application/json;charset=utf-8");
+            xhr.send(JSON.stringify(data));
+        }
+        const getAll = () => {
+            ajax({
+                method: "GET",
+                url: "http://localhost:5555/santos",
+                success: (res) => {
+                    console.log(res);
+                    res.forEach(element => {
+                        $template.querySelector(".name").textContent = element.nombre;
+                        $template.querySelector(".constellation").textContent = element.constelacion;
+                        $template.querySelector(".edit").dataset.id = element.id;
+                        $template.querySelector(".edit").dataset.name = element.name;
+                        $template.querySelector(".edit").dataset.cosntellation = element.constelacion;
+                        $template.querySelector(".delete").dataset.id = element.id;
+
+                        let $clone = document.importNode($template, true);
+                        $fragment.appendChild($clone);
+                    });
+                    $table.querySelector("tbody").appendChild($fragment);
+                },
+                error: (err) => {
+                    console.error(err);
+                    $table.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`)
+                },
+                data: null
+            })
+        }
+        document.addEventListener("DOMContentLoaded",getAll);
     </script>
 </body>
+
 </html>
