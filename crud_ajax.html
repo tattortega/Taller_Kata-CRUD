@@ -99,6 +99,27 @@
             })
         }
         document.addEventListener("DOMContentLoaded",getAll);
+
+        document.addEventListener("submit", e => {
+            if (e.target === $form) {
+                e.preventDefault();
+
+                if (!e.target.id.value) {
+                    ajax({
+                        url: "http://localhost:5555/santos",
+                        method: "POST",
+                        success: (res) => location.reload(),
+                        error: () => $form.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`),
+                        data: {
+                            nombre: e.target.nombre.value,
+                            constelacion: e.target.constelacion.value
+                        }
+                    })
+                } else{
+
+                }
+            }
+        })
     </script>
 </body>
 
