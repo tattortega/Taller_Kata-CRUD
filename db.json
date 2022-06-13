@@ -65,22 +65,22 @@
     {
       "id": 1,
       "nombre": "Athena",
-      "de": "Tierra"
+      "origen": "Tierra"
     },
     {
       "id": 2,
       "nombre": "Poseidón",
-      "de": "Mar"
+      "origen": "Mar"
     },
     {
       "id": 3,
       "nombre": "Hades",
-      "de": "Inframundo"
+      "origen": "Inframundo"
     },
     {
       "id": 4,
       "nombre": "Zeus",
-      "de": "Cielo"
+      "origen": "Cielo"
     }
   ]
 }
