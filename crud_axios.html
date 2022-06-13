@@ -114,15 +114,14 @@
                         headers: {
                             "Content-type": "application/json;charset=utf-8"
                         },
-                        body: JSON.stringify({
+                        data: JSON.stringify({
                             nombre: e.target.nombre.value,
                             constelacion: e.target.constelacion.value,
                         })
                     },
-                        res = await fetch(`http://localhost:5555/santos/${e.target.id.value}`, options),
-                        json = await res.json();
+                        res = await axios(`http://localhost:5555/santos/${e.target.id.value}`, options),
+                        json = await res.data;
 
-                    if (!res.ok) throw { status: res.status, statusText: res.statusText };
                     location.reload();
                 } catch (error) {
                     let message = err.statusText || "Ocurrio un error";
@@ -130,6 +129,34 @@
                 }
             }
         });
+
+        document.addEventListener("click", async e => {
+            if (e.target.matches("#edit")) {
+                $tittle.textContent = "Editar Santo";
+                $form.nombre.value = e.target.dataset.name;
+                $form.constelacion.value = e.target.dataset.constellation;
+                $form.id.value = e.target.dataset.id;
+            }
+            if (e.target.matches("#delete")) {
+                let isDelete = confirm(`¿Estas seguro de eliminar el id ${e.target.dataset.id}?`);
+                if (isDelete) {
+                    try {
+                        let options = {
+                            method: "DELETE",
+                            headers: {
+                                "Content-type": "application/json;charset=utf-8"
+                            }
+                        },
+                            res = await axios(`http://localhost:5555/santos/${e.target.dataset.id}`, options),
+                            json = await res.data
+                        location.reload();
+                    } catch (err) {
+                        let message = err.statusText || "Ocurrio un error";
+                        alert(`Error ${err.satus}:${message}`)
+                    }
+                }
+            }
+        })
     </script>
 </body>
 
