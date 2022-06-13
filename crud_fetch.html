@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <title>CRUD API REST FETCH</title>
 </head>
@@ -21,7 +21,8 @@
         <form id="crud-form">
             <input type="text" class="form-control" style="width: 30%;" name="nombre" placeholder="Nombre" required>
             <br>
-            <input type="text" class="form-control" style="width: 30%;" name="constelacion" placeholder="Constelacion" required>
+            <input type="text" class="form-control" style="width: 30%;" name="constelacion" placeholder="Constelacion"
+                required>
             <br>
             <input type="submit" class="btn btn-primary" value="Enviar">
             <input type="hidden" name="id">
@@ -58,32 +59,61 @@
         const $template = document.getElementById("crud-template").content;
         const $fragment = document.createDocumentFragment();
 
-        const getAll = async() => {
+        const getAll = async () => {
             try {
                 let res = await fetch("http://localhost:5555/santos");
                 let json = await res.json();
 
-                if(!res.ok) throw {status: res.status, statusText: res.statusText};
+                if (!res.ok) throw { status: res.status, statusText: res.statusText };
                 json.forEach(element => {
-                        $template.querySelector("#name").textContent = element.nombre;
-                        $template.querySelector("#constellation").textContent = element.constelacion;
-                        $template.querySelector("#edit").dataset.id = element.id;
-                        $template.querySelector("#edit").dataset.name = element.nombre;
-                        $template.querySelector("#edit").dataset.constellation = element.constelacion;
-                        $template.querySelector("#delete").dataset.id = element.id;
+                    $template.querySelector("#name").textContent = element.nombre;
+                    $template.querySelector("#constellation").textContent = element.constelacion;
+                    $template.querySelector("#edit").dataset.id = element.id;
+                    $template.querySelector("#edit").dataset.name = element.nombre;
+                    $template.querySelector("#edit").dataset.constellation = element.constelacion;
+                    $template.querySelector("#delete").dataset.id = element.id;
 
-                        let $clone = document.importNode($template, true);
-                        $fragment.appendChild($clone);
-                    });
-                    $table.querySelector("tbody").appendChild($fragment);
+                    let $clone = document.importNode($template, true);
+                    $fragment.appendChild($clone);
+                });
+                $table.querySelector("tbody").appendChild($fragment);
 
             } catch (err) {
-                let message =  err.statusText || "Ocurrio un error";    
+                let message = err.statusText || "Ocurrio un error";
                 $table.insertAdjacentHTML("afterend", `<p><b>Error ${err.status}: ${message}</b></p>`);
             }
         }
-
         document.addEventListener("DOMContentLoaded", getAll);
+
+        document.addEventListener("submit", async e => {
+            if (e.target == $form) {
+                e.preventDefault();
+            }
+            if (!e.target.id.value) {
+                try {
+                    let options = {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json;charset=utf-8"
+                        },
+                        body: JSON.stringify({
+                            nombre: e.target.nombre.value,
+                            constelacion: e.target.constelacion.value,
+                        })
+                    },
+                        res = await fetch("http://localhost:5555/santos", options),
+                        json = await res.json();
+
+                    if (!res.ok) throw { status: res.status, statusText: res.statusText };
+                } catch (error) {
+                    let message = err.statusText || "Ocurrio un error";
+                    $form.insertAdjacentHTML("afterend", `<p><b>Error ${err.status}: ${message}</b></p>`);
+                }
+            } else {
+
+            }
+        })    
     </script>
 </body>
+
 </html>
