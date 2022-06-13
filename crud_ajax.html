@@ -138,7 +138,15 @@
                 $form.id.value = e.target.dataset.id;
             }
             if (e.target.matches(".delete")) {
-                
+                let isDelete = confirm(`¿Estas seguro de eliminar el id ${e.target.dataset.id}?`);
+                if (isDelete) {
+                    ajax({
+                        url: `http://localhost:5555/santos/${e.target.dataset.id}`,
+                        method: "DELETE",
+                        success: (res) => location.reload(),
+                        error: () => alert(err)
+                    })
+                }
             }
         })
     </script>
