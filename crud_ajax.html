@@ -54,16 +54,17 @@
         const $template = document.getElementById("crud-template").content;
         const $fragment = document.createDocumentFragment();
 
+        //Funcion para crear el objeto XMLHttpRequest y configurarlo
         const ajax = (options) => {
             let { url, method, success, error, data } = options;
             const xhr = new XMLHttpRequest();
 
-            xhr.addEventListener("readystatechange", e => { 
-                if(xhr.readyState !== 4) return;
-                if (xhr.status >= 200 && xhr.status <300) {
-                    let json  = JSON.parse(xhr.responseText);
+            xhr.addEventListener("readystatechange", e => {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    let json = JSON.parse(xhr.responseText);
                     success(json);
-                } else{
+                } else {
                     let message = xhr.statusText || "Ocurrio un error";
                     error(`Error ${xhr.status}: ${message}`);
                 }
@@ -72,6 +73,8 @@
             xhr.setRequestHeader("Content-type", "application/json;charset=utf-8");
             xhr.send(JSON.stringify(data));
         }
+
+        // Funcion para obtener los datos del API
         const getAll = () => {
             ajax({
                 method: "GET",
@@ -98,8 +101,9 @@
                 data: null
             })
         }
-        document.addEventListener("DOMContentLoaded",getAll);
+        document.addEventListener("DOMContentLoaded", getAll);
 
+        //Evento que escucha el boton enviar del formulario e invoca el metodo POST o PUT 
         document.addEventListener("submit", e => {
             if (e.target === $form) {
                 e.preventDefault();
@@ -115,7 +119,7 @@
                             constelacion: e.target.constelacion.value
                         }
                     })
-                } else{
+                } else {
                     ajax({
                         url: `http://localhost:5555/santos/${e.target.id.value}`,
                         method: "PUT",
@@ -130,6 +134,7 @@
             }
         });
 
+        //Evento que escucha el evento click para editar o eliminar un campo
         document.addEventListener("click", e => {
             if (e.target.matches(".edit")) {
                 $tittle.textContent = "Editar Santo";
