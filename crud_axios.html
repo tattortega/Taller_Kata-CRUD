@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <title>CRUD API REST AXIOS</title>
+</head>
+
+<body>
+    <h1>CRUD API REST AXIOS</h1>
+    <hr>
+    <section class="crud">
+        <article>
+            <h2 id="crud-tittle">Agregar Santo</h2>
+        </article>
+        <form id="crud-form">
+            <input type="text" class="form-control" style="width: 30%;" name="nombre" placeholder="Nombre" required>
+            <br>
+            <input type="text" class="form-control" style="width: 30%;" name="constelacion" placeholder="Constelacion"
+                required>
+            <br>
+            <input type="submit" class="btn btn-primary" value="Enviar">
+            <input type="hidden" name="id">
+        </form>
+        <article>
+            <h2 id="h2">Lista de Santos</h2>
+            <table class="table table-striped" id="crud-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Constelacion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </article>
+    </section>
+    <template id="crud-template">
+        <tr>
+            <td id="name"></td>
+            <td id="constellation"></td>
+            <td>
+                <button class="btn btn-primary" id="edit">Editar</button>
+                <button class="btn btn-danger" id="delete">Eliminar</button>
+            </td>
+        </tr>
+    </template>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const $table = document.querySelector("#crud-table");
+        const $form = document.querySelector("#crud-form");
+        const $tittle = document.querySelector("#crud-tittle");
+        const $template = document.getElementById("crud-template").content;
+        const $fragment = document.createDocumentFragment();
+    </script>
+</body>
+
+</html>
