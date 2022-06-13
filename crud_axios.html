@@ -60,6 +60,7 @@
         const $template = document.getElementById("crud-template").content;
         const $fragment = document.createDocumentFragment();
 
+        //Funcion para asincrona para traer datos del API con axios y mostrarlos en pantalla
         const getAll = async () => {
             try {
                 let res = await axios.get("http://localhost:5555/santos");
@@ -84,6 +85,7 @@
         }
         document.addEventListener("DOMContentLoaded", getAll)
 
+        //Evento que escucha el boton enviar del formulario e invoca el metodo POST o PUT mediante axios
         document.addEventListener("submit", async e => {
             if (e.target == $form) {
                 e.preventDefault();
@@ -130,6 +132,7 @@
             }
         });
 
+        //Escucha el evento click para editar o eliminar un campo
         document.addEventListener("click", async e => {
             if (e.target.matches("#edit")) {
                 $tittle.textContent = "Editar Santo";
