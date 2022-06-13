@@ -60,7 +60,7 @@
         const $template = document.getElementById("crud-template").content;
         const $fragment = document.createDocumentFragment();
 
-        const getAll = async() => {
+        const getAll = async () => {
             try {
                 let res = await axios.get("http://localhost:5555/santos");
                 let json = await res.data;
@@ -82,8 +82,54 @@
                 $table.insertAdjacentHTML("afterend", `<p><b>Error ${err.status}: ${message}</b></p>`);
             }
         }
+        document.addEventListener("DOMContentLoaded", getAll)
 
-        document.addEventListener("DOMContentLoaded",getAll)
+        document.addEventListener("submit", async e => {
+            if (e.target == $form) {
+                e.preventDefault();
+            }
+            if (!e.target.id.value) {
+                try {
+                    let options = {
+                        method: "POST",
+                        headers: {
+                            "Content-type": "application/json;charset=utf-8"
+                        },
+                        data: JSON.stringify({
+                            nombre: e.target.nombre.value,
+                            constelacion: e.target.constelacion.value,
+                        })
+                    },
+                        res = await axios("http://localhost:5555/santos", options),
+                        json = await res.data;
+                    location.reload();
+                } catch (error) {
+                    let message = err.statusText || "Ocurrio un error";
+                    $form.insertAdjacentHTML("afterend", `<p><b>Error ${err.status}: ${message}</b></p>`);
+                }
+            } else {
+                try {
+                    let options = {
+                        method: "PUT",
+                        headers: {
+                            "Content-type": "application/json;charset=utf-8"
+                        },
+                        body: JSON.stringify({
+                            nombre: e.target.nombre.value,
+                            constelacion: e.target.constelacion.value,
+                        })
+                    },
+                        res = await fetch(`http://localhost:5555/santos/${e.target.id.value}`, options),
+                        json = await res.json();
+
+                    if (!res.ok) throw { status: res.status, statusText: res.statusText };
+                    location.reload();
+                } catch (error) {
+                    let message = err.statusText || "Ocurrio un error";
+                    $form.insertAdjacentHTML("afterend", `<p><b>Error ${err.status}: ${message}</b></p>`);
+                }
+            }
+        });
     </script>
 </body>
 
