@@ -59,6 +59,7 @@
         const $template = document.getElementById("crud-template").content;
         const $fragment = document.createDocumentFragment();
 
+        //Funcion para asincrona para traer datos del API con fetch y mostrarlos en pantalla
         const getAll = async () => {
             try {
                 let res = await fetch("http://localhost:5555/santos");
@@ -85,6 +86,7 @@
         }
         document.addEventListener("DOMContentLoaded", getAll);
 
+        //Evento que escucha el boton enviar del formulario e invoca el metodo POST o PUT mediante fetch
         document.addEventListener("submit", async e => {
             if (e.target == $form) {
                 e.preventDefault();
@@ -134,6 +136,7 @@
             }
         });
 
+        //Escucha el evento click para editar o eliminar un campo
         document.addEventListener("click", async e => {
             if (e.target.matches("#edit")) {
                 $tittle.textContent = "Editar Santo";
@@ -145,21 +148,21 @@
                 let isDelete = confirm(`¿Estas seguro de eliminar el id ${e.target.dataset.id}?`);
                 if (isDelete) {
                     try {
-                    let options = {
-                        method: "DELETE",
-                        headers: {
-                            "Content-type": "application/json;charset=utf-8"
-                        }
-                    },
-                        res = await fetch(`http://localhost:5555/santos/${e.target.dataset.id}`, options),
-                        json = await res.json();
+                        let options = {
+                            method: "DELETE",
+                            headers: {
+                                "Content-type": "application/json;charset=utf-8"
+                            }
+                        },
+                            res = await fetch(`http://localhost:5555/santos/${e.target.dataset.id}`, options),
+                            json = await res.json();
 
-                    if (!res.ok) throw { status: res.status, statusText: res.statusText };
-                    location.reload();
-                } catch (err) {
-                    let message = err.statusText || "Ocurrio un error";
-                    alert(`Error ${err.satus}:${message}`)
-                }
+                        if (!res.ok) throw { status: res.status, statusText: res.statusText };
+                        location.reload();
+                    } catch (err) {
+                        let message = err.statusText || "Ocurrio un error";
+                        alert(`Error ${err.satus}:${message}`)
+                    }
                 }
             }
         })
