@@ -1,4 +1,4 @@
-# Taller_Kata-CRUD
+# Taller Kata-CRUD
 
 Taller donde se aplica ajax, axios y fetch en un CRUD 
 
@@ -13,7 +13,7 @@ Taller donde se aplica ajax, axios y fetch en un CRUD
 3. Ejecutar el siguiente comando
 + json-server -w -p 5555 db.json
 
-4. Abrir el html con Open Live Server
+4. Abrir cualquiera de los archivos html con Open Live Server
 
 ## Desarrollador
-Ricardo Ortega-tattortega.28@gmail.com
+Ricardo Ortega - tattortega.28@gmail.com
