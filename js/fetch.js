@@ -9,10 +9,10 @@ const $search = document.querySelector("#crud-search");
 const $list = document.querySelector("#crud-list");
 const $article = document.getElementById("article");
 const $template = document.getElementById("crud-template").content;
+const $fragment = document.createDocumentFragment();
 let sort = "asc";
 let res;
 let json;
-const $fragment = document.createDocumentFragment();
 
 //Funcion para asincrona para traer datos del API con fetch y mostrarlos en pantalla
 async function getData(opcion) {
