@@ -5,159 +5,82 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/alertify.min.js"
+        integrity="sha512-JnjG+Wt53GspUQXQhc+c4j8SBERsgJAoHeehagKHlxQN+MtCCmFDghX9/AcbkkNRZptyZU4zC8utK59M5L45Iw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/alertify.min.css"
+        integrity="sha512-IXuoq1aFd2wXs4NqGskwX2Vb+I8UJ+tGJEu/Dc0zwLNKeQ7CW3Sr6v0yU3z5OQWe3eScVIkER4J9L7byrgR/fA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/AlertifyJS/1.13.1/css/themes/default.min.css"
+        integrity="sha512-RgUjDpwjEDzAb7nkShizCCJ+QTSLIiJO1ldtuxzs0UIBRH4QpOjUU9w47AF9ZlviqV/dOFGWF6o7l3lttEFb6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
     <title>CRUD API REST AJAX</title>
 </head>
 
 <body>
     <h1>CRUD API REST AJAX</h1>
     <hr>
-    <section class="crud">
-        <article>
-            <h2 id="crud-tittle">Agregar Santo</h2>
-        </article>
-        <form id="crud-form">
-            <input type="text" class="form-control" style="width: 30%;" name="nombre" placeholder="Nombre" required>
-            <br>
-            <input type="text" class="form-control" style="width: 30%;" name="constelacion" placeholder="Constelacion" required>
-            <br>
-            <input type="submit" class="btn btn-primary" value="Enviar">
-            <input type="hidden" name="id">
-        </form>
-        <article>
-            <h2 id="h2">Lista de Santos</h2>
-            <table class="table table-striped" id="crud-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Constelacion</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </article>
+    <section class="crud" id="article">
+        <div id="menu">
+            <h2>Los Caballeros del Zoodiaco</h2>
+            <button class="btn btn-info" style="margin-right: 1rem;" onclick="getData('santos')">Santos</button>
+            <button class="btn btn-info" onclick="getData('dioses')">Dioses</button>
+        </div> <br>
+        <div>
+            <div class="article">
+                <div id="form">
+                    <h2 id="crud-tittle"></h2>
+                    <form id="crud-form">
+                        <input type="text" class="form-control" name="nombre" placeholder="Nombre" required>
+                        <br>
+                        <input type="text" class="form-control" id="input2" name="input2" required>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <input type="hidden" name="id">
+                    </form>
+                </div>
+                <div id="search">
+                    <h2 id="crud-search"></h2>
+                    <input type="text" class="form-control" id="inputSearch" placeholder="Escribe el nombre" required>
+                    <br>
+                    <button onclick="search()" id="buttonFilter" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+            <article>
+                <h2 id="crud-list"></h2>
+                <table class="table table-striped" id="crud-table">
+                    <thead>
+                        <tr>
+                            <th id="column1" style='text-decoration: underline;cursor: pointer;'
+                                onclick="sortTable($column1.id)">Nombre</th>
+                            <th id="column2" style='text-decoration: underline;cursor: pointer;'
+                                onclick="sortTable($column2.id)"></th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+            </article>
+        </div>
     </section>
     <template id="crud-template">
         <tr>
             <td id="name"></td>
-            <td id="constellation"></td>
+            <td id="row2"></td>
             <td>
                 <button class="btn btn-primary" id="edit">Editar</button>
                 <button class="btn btn-danger" id="delete">Eliminar</button>
             </td>
         </tr>
     </template>
-    <script>
-        const $table = document.querySelector("#crud-table");
-        const $form = document.querySelector("#crud-form");
-        const $tittle = document.querySelector("#crud-tittle");
-        const $template = document.getElementById("crud-template").content;
-        const $fragment = document.createDocumentFragment();
-
-        //Funcion para crear el objeto XMLHttpRequest y configurarlo
-        const ajax = (options) => {
-            let { url, method, success, error, data } = options;
-            const xhr = new XMLHttpRequest();
-
-            xhr.addEventListener("readystatechange", e => {
-                if (xhr.readyState !== 4) return;
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    let json = JSON.parse(xhr.responseText);
-                    success(json);
-                } else {
-                    let message = xhr.statusText || "Ocurrio un error";
-                    error(`Error ${xhr.status}: ${message}`);
-                }
-            });
-            xhr.open(method || "GET", url);
-            xhr.setRequestHeader("Content-type", "application/json;charset=utf-8");
-            xhr.send(JSON.stringify(data));
-        }
-
-        // Funcion para obtener los datos del API
-        const getAll = () => {
-            ajax({
-                method: "GET",
-                url: "http://localhost:5555/santos",
-                success: (res) => {
-                    console.log(res);
-                    res.forEach(element => {
-                        $template.querySelector("#name").textContent = element.nombre;
-                        $template.querySelector("#constellation").textContent = element.constelacion;
-                        $template.querySelector("#edit").dataset.id = element.id;
-                        $template.querySelector("#edit").dataset.name = element.nombre;
-                        $template.querySelector("#edit").dataset.constellation = element.constelacion;
-                        $template.querySelector("#delete").dataset.id = element.id;
-
-                        let $clone = document.importNode($template, true);
-                        $fragment.appendChild($clone);
-                    });
-                    $table.querySelector("tbody").appendChild($fragment);
-                },
-                error: (err) => {
-                    console.error(err);
-                    $table.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`)
-                },
-                data: null
-            })
-        }
-        document.addEventListener("DOMContentLoaded", getAll);
-
-        //Evento que escucha el boton enviar del formulario e invoca el metodo POST o PUT 
-        document.addEventListener("submit", e => {
-            if (e.target === $form) {
-                e.preventDefault();
-
-                if (!e.target.id.value) {
-                    ajax({
-                        url: "http://localhost:5555/santos",
-                        method: "POST",
-                        success: (res) => location.reload(),
-                        error: () => $form.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`),
-                        data: {
-                            nombre: e.target.nombre.value,
-                            constelacion: e.target.constelacion.value
-                        }
-                    })
-                } else {
-                    ajax({
-                        url: `http://localhost:5555/santos/${e.target.id.value}`,
-                        method: "PUT",
-                        success: (res) => location.reload(),
-                        error: () => $form.insertAdjacentHTML("afterend", `<p><b>${err}</b></p>`),
-                        data: {
-                            nombre: e.target.nombre.value,
-                            constelacion: e.target.constelacion.value
-                        }
-                    })
-                }
-            }
-        });
-
-        //Evento que escucha el evento click para editar o eliminar un campo
-        document.addEventListener("click", e => {
-            if (e.target.matches("#edit")) {
-                $tittle.textContent = "Editar Santo";
-                $form.nombre.value = e.target.dataset.name;
-                $form.constelacion.value = e.target.dataset.constellation;
-                $form.id.value = e.target.dataset.id;
-            }
-            if (e.target.matches("#delete")) {
-                let isDelete = confirm(`¿Estas seguro de eliminar el id ${e.target.dataset.id}?`);
-                if (isDelete) {
-                    ajax({
-                        url: `http://localhost:5555/santos/${e.target.dataset.id}`,
-                        method: "DELETE",
-                        success: (res) => location.reload(),
-                        error: () => alert(err)
-                    })
-                }
-            }
-        })
+    <script src="./js/ajax.js">
     </script>
 </body>
 
