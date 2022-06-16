@@ -16,7 +16,7 @@ Taller donde se aplica ajax, axios y fetch en un CRUD
 4. Abrir cualquiera de los archivos html con Open Live Server
 
 ## Video de sustentación
-
++ https://youtu.be/3sYDnLnQS88
 
 ## Desarrollador
 Ricardo Ortega - tattortega.28@gmail.com
